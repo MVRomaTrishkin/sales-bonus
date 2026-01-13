@@ -70,14 +70,14 @@ function analyzeSalesData(data, options) {
     data.purchase_records.forEach((record)  => {
         const seller = sellerIndex[record.seller_id];
         seller.sales_count +=1;
-        let revenue = (record.total_amount - record.total_discount);
+        record.revenue += (record.total_amount - record.total_discount);
 
         record.items.forEach((item) => {
             const product = productIndex[item.sku];
             let cost = product.purchase_price * item.quantity;
             seller.revenue += calculateSimpleRevenue(item, product)
-            let revenue = calculateSimpleRevenue(item, product)
-            seller.profit += revenue - cost;
+            item.revenue = calculateSimpleRevenue(item, product)
+            seller.profit += item.revenue - cost;
              
 
             if (!seller.products_sold[item.sku]) {
@@ -91,7 +91,7 @@ function analyzeSalesData(data, options) {
     
     newSellerStats.forEach((el, index) => {
         el.bonus =  calculateBonusByProfit(index, sellerStats.length, el);
-        el.top_products = Object.entries(el.products_sold).map(elemet => ({sku: elemet[0], quanity: elemet[1]})).sort((a, b) => b.quanity - a.quanity).slice(0, 10);
+        el.top_products = Object.entries(el.products_sold).map(elemet => ({sku: elemet[0], quantity: elemet[1]})).sort((a, b) => b.quantity - a.quantity).slice(0, 10);
     })
     return newSellerStats.map(seller => ({
         seller_id: seller.id,
