@@ -93,7 +93,7 @@ function analyzeSalesData(data, options) {
         el.bonus =  calculateBonusByProfit(index, sellerStats.length, el);
         el.top_products = Object.entries(el.products_sold).map(elemet => ({sku: elemet[0], quantity: elemet[1]})).sort((a, b) => b.quantity - a.quantity).slice(0, 10);
     })
-    return newSellerStats.map(seller => ({
+    let newSeller = newSellerStats.map(seller => ({
         seller_id: seller.id,
         name: seller.name,
         revenue: +seller.revenue.toFixed(2),
@@ -102,6 +102,7 @@ function analyzeSalesData(data, options) {
         top_products: seller.top_products,
         bonus: +seller.bonus.toFixed(2)
     }))
+    return newSeller
 }
 
     // @TODO: Проверка входных данных
