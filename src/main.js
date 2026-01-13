@@ -88,7 +88,7 @@ function analyzeSalesData(data, options) {
     let newSellerStats = sellerStats.sort((a, b) => b.profit -  a.profit )
     
     newSellerStats.forEach((el, index) => {
-        el.bonus =  calculateBonusByProfit(index, sellerStats.length, el);
+        el.bonus =  el.profit * (calculateBonusByProfit(index, sellerStats.length, el) / 100);
         el.top_products = Object.entries(el.products_sold).map(elemet => ({sku: elemet[0], quanity: elemet[1]})).sort((a, b) => b.quanity - a.quanity).slice(0, 10);
     })
     return sellerStats.map(seller => ({
