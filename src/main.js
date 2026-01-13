@@ -20,13 +20,13 @@ function calculateSimpleRevenue(purchase, _product) {
  */
 function calculateBonusByProfit(index, total, seller) {
     if (index == 0) {
-        return 15
+        return seller.profit * (15 / 100)
     } else if (index == 1 || index == 2) {
-        return 10
+        return seller.profit * (10 / 100)
     } else if (index == total-1) {
         return 0
     } else {
-        return 5
+        return seller.profit * (5 / 100)
     }
 
 }
@@ -69,11 +69,12 @@ function analyzeSalesData(data, options) {
     data.purchase_records.forEach((record)  => {
         const seller = sellerIndex[record.seller_id];
         seller.sales_count +=1;
-        seller.revenue += (record.total_amount - record.total_discount);
+        let revenue = (record.total_amount - record.total_discount);
 
         record.items.forEach((item) => {
             const product = productIndex[item.sku];
             let cost = product.purchase_price * item.quantity;
+            seller.revenue += calculateSimpleRevenue(item, product)
             let revenue = calculateSimpleRevenue(item, product)
             seller.profit += revenue - cost;
              
@@ -88,20 +89,19 @@ function analyzeSalesData(data, options) {
     let newSellerStats = sellerStats.sort((a, b) => b.profit -  a.profit )
     
     newSellerStats.forEach((el, index) => {
-        el.bonus =  el.profit * (calculateBonusByProfit(index, sellerStats.length, el) / 100);
+        el.bonus =  calculateBonusByProfit(index, sellerStats.length, el);
         el.top_products = Object.entries(el.products_sold).map(elemet => ({sku: elemet[0], quanity: elemet[1]})).sort((a, b) => b.quanity - a.quanity).slice(0, 10);
     })
     return sellerStats.map(seller => ({
         seller_id: seller.id,
         name: seller.name,
-        revenue: seller.revenue.toFixed(2),
-        profit: seller.profit.toFixed(2),
-        sales_count: seller.sales_count,
+        revenue: +seller.revenue.toFixed(2),
+        profit: +seller.profit.toFixed(2),
+        sales_count: +seller.sales_count,
         top_products: seller.top_products,
-        bonus: seller.bonus.toFixed(2)
+        bonus: +seller.bonus.toFixed(2)
     }))
 }
-
 
     // @TODO: Проверка входных данных
 
