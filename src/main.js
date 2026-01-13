@@ -93,7 +93,7 @@ function analyzeSalesData(data, options) {
         el.bonus =  calculateBonusByProfit(index, sellerStats.length, el);
         el.top_products = Object.entries(el.products_sold).map(elemet => ({sku: elemet[0], quanity: elemet[1]})).sort((a, b) => b.quanity - a.quanity).slice(0, 10);
     })
-    return sellerStats.map(seller => ({
+    return newSellerStats.map(seller => ({
         seller_id: seller.id,
         name: seller.name,
         revenue: +seller.revenue.toFixed(2),
