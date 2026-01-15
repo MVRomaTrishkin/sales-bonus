@@ -6,8 +6,8 @@
  */
 function calculateSimpleRevenue(purchase, _product) {
     const { discount, sale_price, quantity } = purchase;
-    let totalPrice = sale_price * quantity;
-    return totalPrice * (1 - discount/100)
+    discount = 1 - (purchase.discount / 100);
+    return( purchase.sale_price,  purchase.quantity,  discount;)
    // @TODO: Расчет выручки от операции
 }
 
@@ -19,16 +19,15 @@ function calculateSimpleRevenue(purchase, _product) {
  * @returns {number}
  */
 function calculateBonusByProfit(index, total, seller) {
-    if (index == 0) {
-        return seller.profit * (15 / 100)
-    } else if (index == 1 || index == 2) {
-        return seller.profit * (10 / 100)
-    } else if (index == total-1) {
-        return 0
+    if (index === 0) {
+        return seller.profit * 0.15;
+    } else if (index === 1 || index === 2) {
+        return seller.profit * 0.10;
+    } else if (index === total - 1) {
+        return 0;
     } else {
-        return seller.profit * (5 / 100)
+        return seller.profit * 0.05;
     }
-
 }
 /**
  * Функция для анализа данных продаж
@@ -120,4 +119,3 @@ function analyzeSalesData(data, options) {
     // @TODO: Назначение премий на основе ранжирования
 
     // @TODO: Подготовка итоговой коллекции с нужными полями
-
